@@ -1,2 +1,14 @@
 #!/bin/sh
-echo helloworld
+filenames=$(git diff --name-only --diff-filter=d HEAD)
+stopCommit=false
+for filename in $filenames
+do
+	if [[ $(basename $filename) != "test_tc"* ]] && [[ $filename == *"tests/"* ]] && [[ $(basename $filename) != "__init__.py" ]] && [[ $(basename $filename) == *".py" ]];then
+    		echo "Wrong File Name" $(basename $filename)
+		stopCommit=true
+	fi
+done
+if $stopCommit ; then
+    echo "Stopping the commit! Fix the above issues"
+    exit 1
+fi
